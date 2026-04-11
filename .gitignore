@@ -1,0 +1,46 @@
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Build output
+build/
+dist/
+out/
+target/
+bin/
+*.exe
+
+# Temp files
+/tmp/
+*.tmp
+*.bak
+
+# Per-project Claude Code tooling cache. Personal state stays local, but
+# .claude/rules/, .claude/agents/, and .claude/skills/ are project-shared
+# content per:
+#   https://code.claude.com/docs/en/memory    (path-scoped rules)
+#   https://code.claude.com/docs/en/sub-agents (subagent role definitions)
+#   https://code.claude.com/docs/en/skills     (slash-invokable playbooks)
+# The `.claude/*` glob only matches direct children of .claude/, so the
+# negations below let those directories through while still ignoring
+# .claude/settings.local.json and any other per-developer state.
+.claude/*
+!.claude/rules/
+!.claude/agents/
+!.claude/skills/
