@@ -36,6 +36,9 @@ time.
 - **`.pre-commit-config.yaml`** — generic hygiene hooks plus the
   drift guard above. No language-specific tooling; add your own
   (`go-fmt`, `ruff`, `eslint`, ...) below the comment marker.
+- **`.claudeignore`** — controls what Claude Code loads into context.
+  Dependency dirs and lock files are commented out by default;
+  uncomment the lines that match your stack.
 - **`.gitignore`** — with the three `.claude/` negations baked in so
   `rules/`, `agents/`, and `skills/` stay tracked.
 
@@ -84,14 +87,17 @@ existing project and make sure `.gitignore` allows
    ones (`PROJECT_NAME`, `OWNER_NAME`, `DESCRIPTION`); the rest
    (`BUILD_COMMAND`, `TEST_COMMAND`, etc.) you fill in as the project
    takes shape.
-2. Open `.pre-commit-config.yaml` and uncomment or add the
+2. Open `.claudeignore` and uncomment the dependency directory and
+   lock file lines that match your stack (e.g. `node_modules/` and
+   `package-lock.json` for Node, `target/` and `Cargo.lock` for Rust).
+3. Open `.pre-commit-config.yaml` and uncomment or add the
    language-specific hooks for your stack (Go, TypeScript, Python,
    Rust, ...).
-3. Replace `.claude/rules/tests.md` coverage targets with the real
+4. Replace `.claude/rules/tests.md` coverage targets with the real
    ones for your project.
-4. Delete `.claude/skills/example-playbook/` once you have at least
+5. Delete `.claude/skills/example-playbook/` once you have at least
    one real project-specific skill.
-5. Run `scripts/check-claude-structure.sh` to confirm the drift guard
+6. Run `scripts/check-claude-structure.sh` to confirm the drift guard
    is happy. If you are about to make your first commit, run
    `pre-commit install` first so the hook fires automatically.
 
@@ -106,6 +112,7 @@ new project requires applying the same pattern:
 - Path-scoped rules in `.claude/rules/`
 - Subagents in `.claude/agents/`
 - Skills in `.claude/skills/`
+- `.claudeignore` so Claude does not waste context on binaries, deps, and lock files
 - `.gitignore` negations so none of the above get silently hidden
 - Pre-commit drift guard so none of the above silently regress
 

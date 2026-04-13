@@ -69,6 +69,7 @@ Claude does not need. Comments inside fenced code blocks are preserved.
 | `docs/ORCHESTRATION.md` | Multi-agent composition patterns |
 | `docs/SETUP.md` | Contributor onboarding |
 | `docs/TROUBLESHOOTING.md` | Common errors and fixes |
+| `.claudeignore` | Files Claude Code should never load into context |
 | `.claude/agents/*.md` | Subagent role definitions (frontmatter-driven) |
 | `.claude/skills/*/SKILL.md` | Slash-invokable playbooks |
 | `.claude/rules/*.md` | Path-scoped rules (this directory) |

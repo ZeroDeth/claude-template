@@ -101,5 +101,6 @@ Orchestration patterns for composing multiple subagents live in
 | `.claude/agents/*.md` | Subagent role definitions (frontmatter-driven) |
 | `.claude/skills/*/SKILL.md` | Slash-invokable playbooks |
 | `.claude/rules/*.md` | Path-scoped rules that load only when matching files are touched |
+| `.claudeignore` | Files Claude Code should never load into context |
 | `.pre-commit-config.yaml` | Generic hygiene + drift guard |
 | `scripts/check-claude-structure.sh` | Drift guard validator (runs via pre-commit) |
