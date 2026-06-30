@@ -32,11 +32,12 @@ bin/
 *.bak
 
 # Per-project Claude Code tooling cache. Personal state stays local, but
-# .claude/rules/, .claude/agents/, and .claude/skills/ are project-shared
-# content per:
+# .claude/rules/, .claude/agents/, .claude/skills/, and .claude/commands/
+# are project-shared content per:
 #   https://code.claude.com/docs/en/memory    (path-scoped rules)
 #   https://code.claude.com/docs/en/sub-agents (subagent role definitions)
 #   https://code.claude.com/docs/en/skills     (slash-invokable playbooks)
+#   https://code.claude.com/docs/en/slash-commands (custom slash commands)
 # The `.claude/*` glob only matches direct children of .claude/, so the
 # negations below let those directories through while still ignoring
 # .claude/settings.local.json and any other per-developer state.
@@ -44,3 +45,4 @@ bin/
 !.claude/rules/
 !.claude/agents/
 !.claude/skills/
+!.claude/commands/

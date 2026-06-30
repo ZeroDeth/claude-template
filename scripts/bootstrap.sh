@@ -83,6 +83,10 @@ files=(
   .claude/rules/escalation.md
   .claude/rules/memory.md
   docs/HARNESS.md
+  .claude/commands/build.md
+  .claude/commands/test.md
+  .claude/commands/lint.md
+  .claude/commands/run.md
 )
 
 # Use perl because it handles multi-character placeholders identically

@@ -87,6 +87,14 @@ any tool can invoke them explicitly by name:
 - `test-writer`: fill test-coverage gaps for a package
 - `docs-writer`: update human-facing documentation
 
+Custom slash commands live in `.claude/commands/` and run a single
+project operation when invoked:
+
+- `/build`: run `{{BUILD_COMMAND}}` and report errors
+- `/test`: run `{{TEST_COMMAND}}` and report failures
+- `/lint`: run `{{LINT_COMMAND}}` and list issues by severity
+- `/run`: start the project with `{{RUN_COMMAND}}`
+
 Invocable skills live in `.claude/skills/` as slash-invokable playbooks:
 
 - `/before-commit`: run the full validation sequence before committing
@@ -116,6 +124,7 @@ Orchestration patterns for composing multiple subagents live in
 | `docs/SETUP.md` | Contributor onboarding |
 | `docs/TROUBLESHOOTING.md` | Common errors and fixes |
 | `.claude/agents/*.md` | Subagent role definitions (frontmatter-driven) |
+| `.claude/commands/*.md` | Custom slash commands (`/build`, `/test`, `/lint`, `/run`) |
 | `.claude/skills/*/SKILL.md` | Slash-invokable playbooks |
 | `.claude/rules/escalation.md` | When and how to escalate to `{{REVIEWER_TOOL}}` |
 | `.claude/rules/memory.md` | `{{MEMORY_MCP}}` protocol for every session |

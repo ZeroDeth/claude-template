@@ -16,6 +16,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-30
+
+### Added
+
+- `.claude/commands/build.md`: `/build` command -- runs `{{BUILD_COMMAND}}` and
+  reports errors with file and line references.
+- `.claude/commands/test.md`: `/test` command -- runs `{{TEST_COMMAND}}` and
+  reports failing test names and broken assertions.
+- `.claude/commands/lint.md`: `/lint` command -- runs `{{LINT_COMMAND}}` and
+  lists issues grouped by severity.
+- `.claude/commands/run.md`: `/run` command -- starts the project with
+  `{{RUN_COMMAND}}` and confirms the listening address.
+
+### Changed
+
+- `.gitignore`: added `!.claude/commands/` negation so custom slash commands
+  are tracked alongside rules, agents, and skills.
+- `scripts/check-claude-structure.sh`: drift guard now checks for the
+  `!.claude/commands/` negation.
+- `AGENTS.md`: added "Custom slash commands" section and `commands/` row in
+  the project files table.
+- `scripts/bootstrap.sh`: registered new command files for placeholder
+  substitution.
+
 ## [0.2.0] - 2026-06-30
 
 ### Added

@@ -141,7 +141,7 @@ fi
 # 4. .gitignore negations
 # ---------------------------------------------------------------------------
 gitignore_fail=0
-for dir in rules agents skills; do
+for dir in rules agents skills commands; do
   if ! grep -qE "^!\.claude/$dir/?$" .gitignore 2>/dev/null; then
     fail_msg ".gitignore is missing '!.claude/$dir/' negation"
     printf "       Without it, the .claude/* glob hides .claude/%s/ entirely.\n" "$dir" >&2
@@ -150,7 +150,7 @@ for dir in rules agents skills; do
 done
 
 if [ "$gitignore_fail" -eq 0 ]; then
-  ok_msg ".gitignore preserves .claude/rules/, .claude/agents/, .claude/skills/"
+  ok_msg ".gitignore preserves .claude/rules/, .claude/agents/, .claude/skills/, .claude/commands/"
 fi
 
 # ---------------------------------------------------------------------------
