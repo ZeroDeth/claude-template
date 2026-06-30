@@ -64,6 +64,19 @@ Full before-commit sequence: the `before-commit` skill
 - Do not commit secrets, tokens, private keys, or `.env*` files.
 - Do not delete files or branches without explicit approval.
 
+## Memory and harness
+
+This project uses `{{MEMORY_MCP}}` as its persistent memory tool
+(wing: `{{MEMORY_WING}}`). The protocol is in `.claude/rules/memory.md`.
+If the MCP server is not configured, sessions proceed without memory.
+
+Escalation to a reviewer model (`{{REVIEWER_TOOL}}`) is mandatory before
+substantive implementation and before declaring non-trivial tasks done. The
+escalation rule is in `.claude/rules/escalation.md`.
+
+For loop engineering patterns (DOER/CHECKER, `/goal`, `/delegate`) and the
+optional Hermes Agent complementary runtime, see `docs/HARNESS.md`.
+
 ## Subagents and skills
 
 Invocable subagents live in `.claude/agents/` as frontmatter-driven
@@ -78,6 +91,10 @@ Invocable skills live in `.claude/skills/` as slash-invokable playbooks:
 
 - `/before-commit`: run the full validation sequence before committing
   (user-invocable only; Claude does not auto-run it)
+- `/goal`: turn a task into a self-verifying DOER/CHECKER loop; requires
+  end state, machine-checkable evidence, constraints, and a turn ceiling
+- `/delegate`: dispatch independent work units to parallel subagents with
+  memory context loaded and results reviewed
 - `/example-playbook`: remove or replace with a real multi-step
   procedure from your project
 
@@ -100,7 +117,10 @@ Orchestration patterns for composing multiple subagents live in
 | `docs/TROUBLESHOOTING.md` | Common errors and fixes |
 | `.claude/agents/*.md` | Subagent role definitions (frontmatter-driven) |
 | `.claude/skills/*/SKILL.md` | Slash-invokable playbooks |
+| `.claude/rules/escalation.md` | When and how to escalate to `{{REVIEWER_TOOL}}` |
+| `.claude/rules/memory.md` | `{{MEMORY_MCP}}` protocol for every session |
 | `.claude/rules/*.md` | Path-scoped rules that load only when matching files are touched |
 | `.claudeignore` | Files Claude Code should never load into context |
 | `.pre-commit-config.yaml` | Generic hygiene + drift guard |
+| `docs/HARNESS.md` | Harness engineering, loop engineering, Hermes Agent reference |
 | `scripts/check-claude-structure.sh` | Drift guard validator (runs via pre-commit) |

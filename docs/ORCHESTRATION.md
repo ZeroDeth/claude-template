@@ -70,6 +70,50 @@ Main agent:
      - Run the code-reviewer subagent on the aggregate diff.
 ```
 
+## DOER / CHECKER principle
+
+Agents must not verify their own work. The checker runs independent
+verification -- a separate subagent, a separate tool call with fresh context,
+or a CI gate -- and the result is machine-readable (exit code, HTTP status,
+diff content). Nothing merges until the checker passes.
+
+Apply this principle inside every pattern in this document: the agent that
+implements a change is never the agent that confirms it is correct.
+
+## Pattern: Loop with /goal
+
+Use when the success criteria are machine-checkable and the work may take
+multiple iterations. The `/goal` skill handles the DOER / CHECKER cycle
+automatically.
+
+```text
+Main agent:
+  1. Invoke /goal:
+       END STATE:   <one-sentence observable outcome>
+       EVIDENCE:    <exact command whose exit code or output proves success>
+       CONSTRAINTS: <what must never be violated>
+       CEILING:     <turn or budget limit>
+  2. DOER implements one slice per iteration.
+  3. CHECKER runs EVIDENCE as a separate step after each DOER slice.
+  4. On success: /goal surfaces proof to human and runs /before-commit.
+  5. On ceiling: /goal surfaces current state and blocker to human.
+```
+
+## Pattern: Delegate with memory
+
+Use when the task splits into independent units and you want memory context
+carried into each subagent. The `/delegate` skill structures this.
+
+```text
+Main agent:
+  1. Invoke /delegate with UNITS, MEMORY QUERY, and REVIEW target.
+  2. /delegate loads {{MEMORY_MCP}} context, dispatches subagents in parallel
+     (max 3), uses worktrees for file-writing agents.
+  3. code-reviewer runs on the aggregate diff after all subagents return.
+  4. /delegate writes the session diary to {{MEMORY_MCP}}.
+  5. Run /before-commit.
+```
+
 ## When NOT to orchestrate
 
 A single subagent or direct work in the main session is usually
