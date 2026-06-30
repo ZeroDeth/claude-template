@@ -29,6 +29,9 @@
 #   {{PACKAGE_MANAGER}}          npm, pnpm, yarn, go, cargo, uv, ...
 #   {{CORE_PACKAGE}}             path to the main package
 #   {{INTEGRATION_TEST_PATH}}    where integration tests live
+#   {{MEMORY_MCP}}               memory MCP tool prefix (e.g. mcp__claude_ai_MemPalace)
+#   {{MEMORY_WING}}              MemPalace wing slug for this project
+#   {{REVIEWER_TOOL}}            escalation reviewer tool (e.g. advisor)
 #   ... and any project-specific placeholder under docs/
 
 set -euo pipefail
@@ -75,6 +78,11 @@ files=(
   .claude/agents/docs-writer.md
   .claude/skills/before-commit/SKILL.md
   .claude/skills/example-playbook/SKILL.md
+  .claude/skills/goal/SKILL.md
+  .claude/skills/delegate/SKILL.md
+  .claude/rules/escalation.md
+  .claude/rules/memory.md
+  docs/HARNESS.md
 )
 
 # Use perl because it handles multi-character placeholders identically
@@ -86,6 +94,7 @@ for f in "${files[@]}"; do
     perl -i -pe "s/\{\{OWNER_NAME\}\}/$owner_name/g" "$f"
     perl -i -pe "s/\{\{ONE_LINE_DESCRIPTION\}\}/$description/g" "$f"
     perl -i -pe "s/\{\{DATE\}\}/$today/g" "$f"
+    perl -i -pe "s/\{\{MEMORY_WING\}\}/$project_name/g" "$f"
     echo "  updated $f"
   fi
 done

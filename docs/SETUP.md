@@ -49,6 +49,45 @@ Document required environment variables here. For each:
 
 Example file for local dev: `.env.example` (if present).
 
+## Memory and escalation wiring (optional)
+
+The template includes rules for persistent memory (`{{MEMORY_MCP}}`) and
+escalation to a reviewer model (`{{REVIEWER_TOOL}}`). These are placeholder-
+gated: without the MCP server wired, the rules are no-ops.
+
+To wire the reference stack (MemPalace + Claude Code advisor):
+
+**Step 1.** Ensure the MemPalace MCP server is configured in Claude Code
+settings.
+
+**Step 2.** Add the SessionStart hook to `.claude/settings.local.json`
+(not committed):
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Memory active: call mcp__claude_ai_MemPalace__status on first turn'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Step 3.** The `advisor` tool is built into Claude Code, no configuration
+needed. If you use a different reviewer, update `{{REVIEWER_TOOL}}` in the
+bootstrap step or manually in `.claude/rules/escalation.md`.
+
+For Hermes Agent integration (always-on loops, multi-platform access), see
+`docs/HARNESS.md`.
+
 ## Platform gotchas
 
 Document any platform-specific quirks (macOS vs Linux vs Windows).

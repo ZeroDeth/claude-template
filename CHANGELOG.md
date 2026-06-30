@@ -16,6 +16,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-30
+
+### Added
+
+- `.claude/rules/escalation.md`: global rule for escalating to `{{REVIEWER_TOOL}}`
+  before substantive implementation and before declaring non-trivial tasks done.
+- `.claude/rules/memory.md`: global protocol rule for `{{MEMORY_MCP}}` -- wake-up
+  status check, pre-response search, post-session diary write, fact invalidation.
+- `docs/HARNESS.md`: reference covering harness engineering, loop engineering
+  (DOER/CHECKER pattern, `/goal` primitive), and Hermes Agent as an optional
+  complementary runtime.
+- `.claude/skills/goal/SKILL.md`: `/goal` skill -- structures multi-step tasks as
+  self-verifying DOER/CHECKER loops with end state, evidence, constraints, and
+  a turn ceiling.
+- `.claude/skills/delegate/SKILL.md`: `/delegate` skill -- dispatches parallel
+  subagents with memory context, worktree isolation for file writers, and a
+  mandatory review pass.
+- Three new placeholders: `{{MEMORY_MCP}}`, `{{MEMORY_WING}}`, `{{REVIEWER_TOOL}}`.
+  `bootstrap.sh` substitutes `{{MEMORY_WING}}` from the project name; the others
+  are filled in manually after bootstrap.
+
+### Changed
+
+- `docs/ORCHESTRATION.md`: added DOER/CHECKER principle, `/goal` loop pattern,
+  and `/delegate` with memory pattern.
+- `AGENTS.md`: added "Memory and harness" section pointing to the new rules and
+  `docs/HARNESS.md`; added `/goal` and `/delegate` to the skills list; added new
+  files to the project-files table.
+- `docs/SETUP.md`: added "Memory and escalation wiring" section with hook setup
+  instructions for the reference stack.
+- `scripts/bootstrap.sh`: registered new files in the placeholder-substitution
+  list; added `{{MEMORY_MCP}}`, `{{MEMORY_WING}}`, `{{REVIEWER_TOOL}}` to the
+  manual-placeholder reference; substitutes `{{MEMORY_WING}}` automatically.
+
+## [0.1.0] - Initial release
+
 ### Added
 
 - Initial project scaffold from `claude-template`.
