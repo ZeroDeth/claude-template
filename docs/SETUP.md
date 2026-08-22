@@ -88,6 +88,16 @@ bootstrap step or manually in `.claude/rules/escalation.md`.
 For Hermes Agent integration (always-on loops, multi-platform access), see
 `docs/HARNESS.md`.
 
+## Auto mode (optional)
+
+To run Claude Code in auto mode (no routine permission prompts, with a
+classifier blocking destructive or external actions), configure the
+`autoMode` block in your user settings. The classifier ignores
+`autoMode` in project settings, including `.claude/settings.local.json`,
+so it cannot be wired through this repo. See `docs/AUTO-MODE.md` for the
+configuration guide, including a `permissions.ask` recipe that keeps a
+human checkpoint before pushes and pull requests.
+
 ## Platform gotchas
 
 Document any platform-specific quirks (macOS vs Linux vs Windows).

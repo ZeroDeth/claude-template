@@ -16,6 +16,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/AUTO-MODE.md`: configuration guide for Claude Code auto mode --
+  trusted infrastructure via `autoMode.environment`, human-checkpoint
+  `permissions.ask` recipe, block/allow rule overrides with `"$defaults"`,
+  `classifyAllShell`, the `claude auto-mode` inspection subcommands, and
+  denial review. Condensed from
+  <https://code.claude.com/docs/en/auto-mode-config>.
+
+### Changed
+
+- `AGENTS.md` and `.claude/rules/docs.md`: added `docs/AUTO-MODE.md` to the
+  project files tables.
+- `docs/SETUP.md`: added an "Auto mode (optional)" section noting that the
+  classifier reads `autoMode` from user settings only, not from
+  `.claude/settings.local.json`.
+
 ## [0.3.0] - 2026-06-30
 
 ### Added
