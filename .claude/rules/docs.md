@@ -67,10 +67,12 @@ Claude does not need. Comments inside fenced code blocks are preserved.
 | `docs/ARCHITECTURE.md` | Package layout, dependency graph, request flow |
 | `docs/AUTO-MODE.md` | Claude Code auto mode classifier configuration |
 | `docs/CONVENTIONS.md` | Full code style and testing reference |
+| `docs/HARNESS.md` | Harness engineering, loop engineering, Hermes Agent reference |
 | `docs/ORCHESTRATION.md` | Multi-agent composition patterns |
 | `docs/SETUP.md` | Contributor onboarding |
 | `docs/TROUBLESHOOTING.md` | Common errors and fixes |
 | `.claudeignore` | Files Claude Code should never load into context |
 | `.claude/agents/*.md` | Subagent role definitions (frontmatter-driven) |
 | `.claude/skills/*/SKILL.md` | Slash-invokable playbooks |
+| `.claude/commands/*.md` | Custom slash commands (`/build`, `/test`, `/lint`, `/run`) |
 | `.claude/rules/*.md` | Path-scoped rules (this directory) |

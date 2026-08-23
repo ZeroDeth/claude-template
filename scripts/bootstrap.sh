@@ -13,26 +13,10 @@
 #
 #   scripts/bootstrap.sh "my-new-project" "Your Name" "A local X emulator."
 #
-# Placeholders not touched by this script (you fill them in manually
-# as the project takes shape):
-#
-#   {{MODULE_OR_PACKAGE_NAME}}   language-specific module path
-#   {{LICENCE}}                  MIT, Apache-2.0, etc.
-#   {{BUILD_COMMAND}}            e.g., `go build ./...`, `npm run build`
-#   {{TEST_COMMAND}}             e.g., `go test ./...`, `npm test`
-#   {{LINT_COMMAND}}             e.g., `golangci-lint run`, `eslint .`
-#   {{INSTALL_COMMAND}}          e.g., `go mod download`, `npm install`
-#   {{RUN_COMMAND}}              how to start the project locally
-#   {{REPO_URL}}                 git remote URL once you push
-#   {{STATUS}}                   e.g., "v0.1-dev"
-#   {{LANGUAGE_RUNTIME}}         e.g., "Go 1.22+", "Node 20+"
-#   {{PACKAGE_MANAGER}}          npm, pnpm, yarn, go, cargo, uv, ...
-#   {{CORE_PACKAGE}}             path to the main package
-#   {{INTEGRATION_TEST_PATH}}    where integration tests live
-#   {{MEMORY_MCP}}               memory MCP tool prefix (e.g. mcp__claude_ai_MemPalace)
-#   {{MEMORY_WING}}              MemPalace wing slug for this project
-#   {{REVIEWER_TOOL}}            escalation reviewer tool (e.g. advisor)
-#   ... and any project-specific placeholder under docs/
+# Every other {{PLACEHOLDER}} in the scaffold is yours to fill in as
+# the project takes shape. This script does not hand-maintain a list
+# of them (such a list goes stale the moment a doc is added); it scans
+# the tree after substituting and reports exactly what is left.
 
 set -euo pipefail
 
@@ -56,38 +40,38 @@ echo "  description : $description"
 echo "  date        : $today"
 echo
 
-# Files to process. Limit to documentation and config; skip the drift
-# guard and the bootstrap script itself.
-files=(
-  README.md
-  AGENTS.md
-  CLAUDE.md
-  CHANGELOG.md
-  TASKS.md
-  TODO.md
-  .pre-commit-config.yaml
-  docs/ARCHITECTURE.md
-  docs/CONVENTIONS.md
-  docs/ORCHESTRATION.md
-  docs/SETUP.md
-  docs/TROUBLESHOOTING.md
-  .claude/rules/docs.md
-  .claude/rules/tests.md
-  .claude/agents/code-reviewer.md
-  .claude/agents/test-writer.md
-  .claude/agents/docs-writer.md
-  .claude/skills/before-commit/SKILL.md
-  .claude/skills/example-playbook/SKILL.md
-  .claude/skills/goal/SKILL.md
-  .claude/skills/delegate/SKILL.md
-  .claude/rules/escalation.md
-  .claude/rules/memory.md
-  docs/HARNESS.md
-  .claude/commands/build.md
-  .claude/commands/test.md
-  .claude/commands/lint.md
-  .claude/commands/run.md
+# Files to process are DISCOVERED, not hand-listed. A hardcoded list
+# silently misses every doc added to the template later, leaving raw
+# {{PLACEHOLDER}} markers in the generated project. Anything tracked
+# in the scaffold with a text extension is fair game.
+#
+# `find` rather than `git ls-files` on purpose: TEMPLATE.md's Method 2
+# runs this script right after `rm -rf .git && git init`, where the
+# index is empty and `git ls-files` returns nothing.
+#
+# Excluded: scripts/ (bootstrap.sh documents the placeholders in its
+# own header) and TEMPLATE.md (meta-documentation you delete).
+# `while read` rather than `mapfile`: macOS still ships bash 3.2,
+# which has no mapfile.
+files=()
+while IFS= read -r f; do
+  files+=("$f")
+done < <(
+  find . \
+    \( -path ./.git -o -path ./scripts -o -path ./node_modules \
+       -o -path ./vendor -o -path ./.venv -o -path ./target \
+       -o -path ./dist -o -path ./build \) -prune -o \
+    -type f \( -name '*.md' -o -name '*.yaml' -o -name '*.yml' \
+       -o -name '*.json' \) -print \
+  | sed 's|^\./||' \
+  | grep -v '^TEMPLATE\.md$' \
+  | sort
 )
+
+if [ "${#files[@]}" -eq 0 ]; then
+  echo "error: no scaffold files found to process" >&2
+  exit 1
+fi
 
 # Use perl because it handles multi-character placeholders identically
 # on macOS (BSD sed) and Linux (GNU sed) without the in-place -i
@@ -103,11 +87,27 @@ for f in "${files[@]}"; do
   fi
 done
 
+# Report what is still unfilled rather than telling the reader to go
+# find out for themselves.
+remaining=$(grep -rhoE '\{\{[A-Z_]+\}\}' "${files[@]}" 2>/dev/null \
+  | sort -u | grep -v '^{{PLACEHOLDER}}$' || true)
+
+echo
+if [ -n "$remaining" ]; then
+  count=$(printf '%s\n' "$remaining" | wc -l | tr -d ' ')
+  echo "Remaining placeholders to fill in ($count):"
+  printf '%s\n' "$remaining" | sed 's/^/  /'
+  echo
+  echo "  Locate them with:"
+  echo "    grep -rEn '\{\{[A-Z_]+\}\}' . --include='*.md' --include='*.yaml'"
+else
+  echo "No placeholders remain."
+fi
+
 echo
 echo "Next steps:"
-echo "  1. Search for remaining {{PLACEHOLDER}} markers and replace"
-echo "     them as the project takes shape:"
-echo "       grep -rEn '\{\{[A-Z_]+\}\}' . --include='*.md' --include='*.yaml'"
+echo "  1. Fill in the placeholders listed above as the project takes"
+echo "     shape. Not all of them apply to every stack."
 echo "  2. Open .claudeignore and uncomment the dependency directory"
 echo "     and lock file lines that match your stack."
 echo "  3. Uncomment or add language-specific hooks in"

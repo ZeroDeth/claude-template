@@ -154,4 +154,44 @@ if [ "$gitignore_fail" -eq 0 ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# 5. Every docs/*.md is registered where the scaffold advertises it
+# ---------------------------------------------------------------------------
+# A new doc that nobody registers is invisible: agents never find it
+# through the project-files table, and readers never find it through
+# the doc-tree table. This is the drift that let docs/AUTO-MODE.md ship
+# without being wired into generation.
+registry_fail=0
+for f in docs/*.md; do
+  [ -f "$f" ] || continue
+  for table in AGENTS.md .claude/rules/docs.md; do
+    [ -f "$table" ] || continue
+    if ! grep -qF "\`$f\`" "$table"; then
+      fail_msg "$f is not listed in $table"
+      printf "       Add a row for it so the scaffold advertises the file.\n" >&2
+      registry_fail=1
+    fi
+  done
+done
+
+if [ "$registry_fail" -eq 0 ]; then
+  ok_msg "every docs/*.md is listed in AGENTS.md and .claude/rules/docs.md"
+fi
+
+# ---------------------------------------------------------------------------
+# 6. bootstrap.sh still discovers its targets instead of hand-listing
+# ---------------------------------------------------------------------------
+# A hardcoded files=() array silently skips every doc added later,
+# shipping raw {{PLACEHOLDER}} markers into generated projects.
+if [ -f scripts/bootstrap.sh ]; then
+  if grep -qE '^files=\(\s*$' scripts/bootstrap.sh; then
+    fail_msg "scripts/bootstrap.sh hand-lists its target files"
+    printf "       A static list misses docs added later, leaking raw\n" >&2
+    printf "       {{PLACEHOLDER}} markers into generated projects. Discover\n" >&2
+    printf "       the file set at runtime instead.\n" >&2
+  else
+    ok_msg "bootstrap.sh discovers its target files at runtime"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
 exit "$fail"
