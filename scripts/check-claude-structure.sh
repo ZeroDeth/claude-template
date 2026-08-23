@@ -182,9 +182,22 @@ fi
 # ---------------------------------------------------------------------------
 # A hardcoded files=() array silently skips every doc added later,
 # shipping raw {{PLACEHOLDER}} markers into generated projects.
+# Assert the mechanism is present rather than pattern-matching one bad
+# layout: a one-line `files=("a.md" "b.md")` is just as static as a
+# multi-line array, and would slip past a shape-specific test.
 if [ -f scripts/bootstrap.sh ]; then
-  if grep -qE '^files=\(\s*$' scripts/bootstrap.sh; then
-    fail_msg "scripts/bootstrap.sh hand-lists its target files"
+  bootstrap_reason=""
+
+  # Comment lines are excluded so prose mentioning find(1) cannot
+  # satisfy the requirement on its own.
+  if ! grep -qE '^[^#]*find[[:space:]]' scripts/bootstrap.sh; then
+    bootstrap_reason="no find(1) enumeration"
+  elif grep -qE '^[[:space:]]*files=\([[:space:]]*[^)[:space:]]' scripts/bootstrap.sh; then
+    bootstrap_reason="files=() is populated inline"
+  fi
+
+  if [ -n "$bootstrap_reason" ]; then
+    fail_msg "scripts/bootstrap.sh hand-lists its target files ($bootstrap_reason)"
     printf "       A static list misses docs added later, leaking raw\n" >&2
     printf "       {{PLACEHOLDER}} markers into generated projects. Discover\n" >&2
     printf "       the file set at runtime instead.\n" >&2

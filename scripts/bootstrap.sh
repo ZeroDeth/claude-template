@@ -99,7 +99,8 @@ if [ -n "$remaining" ]; then
   printf '%s\n' "$remaining" | sed 's/^/  /'
   echo
   echo "  Locate them with:"
-  echo "    grep -rEn '\{\{[A-Z_]+\}\}' . --include='*.md' --include='*.yaml'"
+  echo "    grep -rEn '\{\{[A-Z_]+\}\}' . --include='*.md' --include='*.yaml' \\"
+  echo "      --include='*.yml' --include='*.json'"
 else
   echo "No placeholders remain."
 fi
