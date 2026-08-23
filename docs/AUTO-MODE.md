@@ -168,14 +168,19 @@ spirit of this template's safety section in `AGENTS.md`:
 }
 ```
 
-**Warning**: setting any of `environment`, `allow`, `soft_deny`, or
-`hard_deny` without `"$defaults"` replaces the entire default list for
-that section, discarding built-in protections such as the force-push
-and `curl | bash` soft blocks or the data-exfiltration hard block. Only
-omit `"$defaults"` when you intend to own the full list; print the
-built-ins with `claude auto-mode defaults` first. Each section is
-evaluated independently, so setting one leaves the others' defaults
-intact.
+**Warning**: omitting `"$defaults"` from a list replaces the built-in
+rules for that one section only; each section is evaluated
+independently, so the other sections keep their defaults. What each
+section loses when its `"$defaults"` is omitted:
+
+- `soft_deny`: every built-in soft block rule, including the force
+  push, `curl | bash`, production deploy, and auto-mode bypass blocks.
+- `hard_deny`: the built-in data-exfiltration rule.
+- `environment`: the default trusted repo and source-control entries.
+- `allow`: the built-in exceptions to the soft block rules.
+
+Only omit `"$defaults"` when you intend to own that full list; print
+the built-ins with `claude auto-mode defaults` first.
 
 ## Route all shell commands through the classifier
 
