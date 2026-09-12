@@ -14,13 +14,16 @@ references. This file only contains Claude-Code-specific overrides.
 - **Path-scoped rules load conditionally.** Files under `.claude/rules/`
   with a `paths:` glob only load when Claude reads files matching the
   glob. Do not duplicate their content into steering files.
-- **Output-shaping skill.** `i-have-adhd` (upstream:
-  <https://github.com/ayghri/i-have-adhd>, MIT) shapes replies: lead with
-  the next action, number multi-step work, restate progress each turn,
-  give concrete time estimates, suppress tangents. Say `i-have-adhd` or
-  `adhd mode` to turn it on; it stays on until `stop adhd mode` or
-  `normal mode`. It is installed at the account level, not vendored in
-  `.claude/skills/`, so a fresh clone will not have it.
+- **Output shaping is on by default.** The `i-have-adhd` skill (upstream:
+  <https://github.com/ayghri/i-have-adhd>, MIT) applies to every reply in
+  this project without being asked for: lead with the next action, number
+  multi-step work so each step is one bounded action, restate progress
+  each turn ("step 3 of 5 done"), give time estimates in minutes rather
+  than "a bit", say what now works after a change, cap lists at five
+  items, and drop tangents. The user turns it off with `normal mode` or
+  `stop adhd mode` and back on with `adhd mode`. The skill itself is
+  installed at the account level, not vendored in `.claude/skills/`; when
+  a clone does not have it, follow the behaviour described here anyway.
 - **Ask, do not guess.** When the user cites "best practice" or a
   published guideline, look it up at the source before proposing
   alternatives. Anthropic's guides are at
