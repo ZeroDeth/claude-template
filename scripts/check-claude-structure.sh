@@ -194,6 +194,17 @@ if [ -f scripts/bootstrap.sh ]; then
     bootstrap_reason="no find(1) enumeration"
   elif grep -qE '^[[:space:]]*files=\([[:space:]]*[^)[:space:]]' scripts/bootstrap.sh; then
     bootstrap_reason="files=() is populated inline"
+  elif ! awk '
+    # The find(1) output must reach the array the substitution loop
+    # reads. A stray find elsewhere in the script plus an array that
+    # nothing appends to would otherwise report as dynamic discovery.
+    /^[^#]*files\+=\(/ { appends = 1 }
+    /^[^#]*done[[:space:]]*<[[:space:]]*<\(/ { in_redirect = 1; next }
+    in_redirect && /^[[:space:]]*\)/ { in_redirect = 0; next }
+    in_redirect && /^[^#]*find[[:space:]]/ { fed_by_find = 1 }
+    END { exit !(appends && fed_by_find) }
+  ' scripts/bootstrap.sh; then
+    bootstrap_reason="find(1) output does not populate the files list"
   fi
 
   if [ -n "$bootstrap_reason" ]; then
