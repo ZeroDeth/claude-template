@@ -81,9 +81,31 @@ settings.
 }
 ```
 
-**Step 3.** The `advisor` tool is built into Claude Code, no configuration
-needed. If you use a different reviewer, update `{{REVIEWER_TOOL}}` in the
+**Step 3.** Turn on the advisor. It is experimental, off by default, and
+only works against the Anthropic API (not Amazon Bedrock, Claude
+Platform on AWS, Google Cloud's Agent Platform, or Microsoft Foundry).
+
+```text
+/advisor fable   # saved to advisorModel in your user settings
+```
+
+Or set `"advisorModel": "fable"` in your user settings, or launch once
+with `claude --advisor fable`. The advisor must be at least as capable
+as the main model: with Opus 5.5 as the main model, use Fable or Opus 5
+or later; a Sonnet advisor is rejected. On plans that bill Fable to usage
+credits, run `/model fable` once to accept that before `/advisor fable`
+takes effect. Subagents inherit the advisor. Setting `DISABLE_TELEMETRY`
+also turns the advisor off. Full reference:
+<https://code.claude.com/docs/en/advisor>.
+
+If you use a different reviewer, update `{{REVIEWER_TOOL}}` in the
 bootstrap step or manually in `.claude/rules/escalation.md`.
+
+**Step 4 (optional).** Opus 5.5 defaults to `medium` effort. A top-level
+`effortLevel` in your user settings no longer applies to it; set its level
+with `/effort` instead. An `effortLevel` in project settings
+(`.claude/settings.json`) applies to every model, so leave it out of the
+committed file unless the whole team wants it.
 
 For Hermes Agent integration (always-on loops, multi-platform access), see
 `docs/HARNESS.md`.
