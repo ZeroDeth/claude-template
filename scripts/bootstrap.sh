@@ -49,8 +49,9 @@ echo
 # runs this script right after `rm -rf .git && git init`, where the
 # index is empty and `git ls-files` returns nothing.
 #
-# Excluded: scripts/ (bootstrap.sh documents the placeholders in its
-# own header) and TEMPLATE.md (meta-documentation you delete).
+# Excluded: scripts/ (both scripts carry literal {{PLACEHOLDER}}
+# patterns that substitution would corrupt) and TEMPLATE.md
+# (meta-documentation you delete).
 # `while read` rather than `mapfile`: macOS still ships bash 3.2,
 # which has no mapfile.
 files=()

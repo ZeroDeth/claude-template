@@ -34,8 +34,8 @@ secrets through CI stay blocked regardless.
 This template's `AGENTS.md` already instructs agents not to push without
 being asked. To make that boundary mechanical instead of instructional,
 add `permissions.ask` rules in your settings. Content-scoped ask rules
-are evaluated before the classifier and always force a prompt, even in
-auto mode:
+are evaluated before the classifier and force a prompt for matching
+commands, even in auto mode:
 
 ```json
 {
@@ -48,11 +48,17 @@ auto mode:
 }
 ```
 
+These rules only match commands that start with `git push` or
+`gh pr create`. A push written another way, such as `git -C <dir> push`
+or `git -c <key>=<value> push`, does not match and is not checkpointed.
+For a checkpoint that inspects the full command text, add a
+[PreToolUse hook](https://code.claude.com/docs/en/hooks#pretooluse).
+
 Pick the mechanism by how firm the boundary needs to be:
 
 | Boundary | Mechanism | Behavior in auto mode |
 |------|------|------|
-| Prompt before the action | `permissions.ask` | Always prompts; the classifier cannot auto-approve a matching action |
+| Prompt before the action | `permissions.ask` | Prompts for commands matching the rule; the classifier cannot auto-approve them |
 | Never run the action | `permissions.deny` | Blocks before the classifier; nothing overrides it |
 | One-off boundary for this session | State it in conversation | The classifier honors it, but context compaction can drop it; use an ask or deny rule for a durable guarantee |
 
@@ -81,8 +87,11 @@ matters for this template: the operator-local hooks that
 there is ignored and belongs in your user settings instead.
 
 Entries from each scope are combined additively. A developer can extend
-the lists but cannot remove entries that managed settings provide. For
-actions that must never run regardless of classifier configuration, use
+the lists but cannot remove entries that managed settings provide. This
+is not a hard policy boundary: `allow` rules are exceptions to soft
+block rules, so a developer's `allow` entry can override an
+organization's `soft_deny` entry. For actions that must never run
+regardless of classifier configuration or user intent, use
 `permissions.deny` in managed settings.
 
 ## Define trusted infrastructure
