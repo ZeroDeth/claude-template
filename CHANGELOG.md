@@ -52,6 +52,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/SETUP.md`: added an "Auto mode (optional)" section noting that the
   classifier reads `autoMode` from user settings only, not from
   `.claude/settings.local.json`.
+- `docs/SETUP.md`: the advisor step no longer claims it needs no
+  configuration. It now covers `/advisor`, `advisorModel`, the pairing
+  rules for Opus 5.5 and Sonnet 5.5 main models (default: Opus 5.5
+  with a Fable 5.1 advisor), the Fable usage-credits step, and the 5.5
+  effort defaults.
+- `.claude/rules/escalation.md`: describes how the advisor is enabled,
+  names the `code-reviewer` fallback where it is unavailable, and drops
+  instructions the advisor already follows on its own.
+- `docs/ORCHESTRATION.md`: documents which model the bundled subagents
+  run on and how to pin one.
 
 ## [0.3.0] - 2026-06-30
 
