@@ -13,9 +13,10 @@ prompt.
 The agents in `.claude/agents/` set no `model` field, so they run on the
 main conversation's model unless the caller passes a `model` for one
 invocation or `CLAUDE_CODE_SUBAGENT_MODEL` is set. Add `model:` (an alias
-such as `sonnet`, or `inherit`) or `effort:` to an agent's frontmatter to
-pin it. Subagents also inherit the configured advisor when their model
-accepts it. See <https://code.claude.com/docs/en/sub-agents#choose-a-model>.
+such as `sonnet`, or `inherit`) to an agent's frontmatter to pin its
+model, and `effort:` to override the session's effort level for it.
+Subagents also inherit the configured advisor when their model accepts
+it. See <https://code.claude.com/docs/en/sub-agents#choose-a-model>.
 
 ## Pattern: Review-after-implement
 
