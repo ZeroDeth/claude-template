@@ -18,6 +18,8 @@ time.
   is editing matching files:
   - `docs.md`: markdown style, markdownlint gotchas, doc tree
   - `tests.md`: test conventions and coverage targets
+  - `escalation.md`: when to escalate to a reviewer model
+  - `memory.md`: memory MCP protocol for every session
 - **`.claude/agents/`** — frontmatter-driven subagent definitions
   (<https://code.claude.com/docs/en/sub-agents>):
   - `code-reviewer`: read-only review of a set of changes
@@ -26,21 +28,36 @@ time.
 - **`.claude/skills/`** — slash-invokable playbooks
   (<https://code.claude.com/docs/en/skills>):
   - `before-commit`: user-invocable full-validation sequence
+  - `goal`: turn a task into a self-verifying DOER/CHECKER loop
+  - `delegate`: dispatch work units to parallel subagents
   - `example-playbook`: delete or replace with your own
+- **`.claude/commands/`** — custom slash commands
+  (<https://code.claude.com/docs/en/slash-commands>): `/build`,
+  `/test`, `/lint`, `/run`, each wired to the matching
+  `{{COMMAND}}` placeholder.
 - **`docs/`** — long-form reference with stubs for ARCHITECTURE,
-  CONVENTIONS, ORCHESTRATION, SETUP, TROUBLESHOOTING.
+  CONVENTIONS, ORCHESTRATION, SETUP, TROUBLESHOOTING, plus
+  HARNESS (harness and loop engineering) and AUTO-MODE (Claude
+  Code auto mode classifier configuration).
+- **`scripts/bootstrap.sh`** — fills the common placeholders across
+  the whole scaffold. It discovers its target files at runtime, so a
+  doc added to the template later is substituted automatically
+  rather than shipping raw `{{PLACEHOLDER}}` markers.
 - **`scripts/check-claude-structure.sh`** — a pre-commit drift guard
   that blocks commits if `CLAUDE.md` exceeds 200 lines, if any file
   references a machine-local path, if an agent or skill is missing
-  its frontmatter, or if `.gitignore` loses its `.claude/` negations.
+  its frontmatter, if `.gitignore` loses its `.claude/` negations, if
+  a `docs/*.md` file is not registered in the `AGENTS.md` and
+  `.claude/rules/docs.md` tables, or if `bootstrap.sh` regresses to a
+  hand-maintained file list.
 - **`.pre-commit-config.yaml`** — generic hygiene hooks plus the
   drift guard above. No language-specific tooling; add your own
   (`go-fmt`, `ruff`, `eslint`, ...) below the comment marker.
 - **`.claudeignore`** — controls what Claude Code loads into context.
   Dependency dirs and lock files are commented out by default;
   uncomment the lines that match your stack.
-- **`.gitignore`** — with the three `.claude/` negations baked in so
-  `rules/`, `agents/`, and `skills/` stay tracked.
+- **`.gitignore`** — with the four `.claude/` negations baked in so
+  `rules/`, `agents/`, `skills/`, and `commands/` stay tracked.
 
 ## How to use this template
 

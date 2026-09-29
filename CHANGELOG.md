@@ -16,8 +16,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/AUTO-MODE.md`: configuration guide for Claude Code auto mode --
+  trusted infrastructure via `autoMode.environment`, human-checkpoint
+  `permissions.ask` recipe, block/allow rule overrides with `"$defaults"`,
+  `classifyAllShell`, the `claude auto-mode` inspection subcommands, and
+  denial review. Condensed from
+  <https://code.claude.com/docs/en/auto-mode-config>.
+
 ### Changed
 
+- `scripts/bootstrap.sh`: discovers its target files at runtime instead of
+  hand-listing them. The static list silently skipped every doc added to the
+  template after the list was written, shipping raw `{{PLACEHOLDER}}` markers
+  into generated projects (`docs/AUTO-MODE.md` was the first casualty). Uses
+  `find` rather than `git ls-files` because TEMPLATE.md's Method 2 runs the
+  script against a freshly initialised, empty index, and a `while read` loop
+  rather than `mapfile` for bash 3.2 on macOS. It also reports the
+  placeholders that remain after substitution instead of carrying a
+  hand-maintained list in its header, which had drifted to the point of
+  omitting 21 of the 42 placeholders actually present in the scaffold.
+- `scripts/check-claude-structure.sh`: two new drift checks -- every
+  `docs/*.md` must be registered in the `AGENTS.md` and `.claude/rules/docs.md`
+  tables, and `bootstrap.sh` must not regress to a hand-maintained file list.
+- `.claude/rules/docs.md`: registered `docs/HARNESS.md` (missing since 0.2.0)
+  and `.claude/commands/*.md` (missing since 0.3.0) in the doc-tree table.
+- `AGENTS.md` and `.claude/rules/docs.md`: added `docs/AUTO-MODE.md` to the
+  project files tables.
+- `TEMPLATE.md`: refreshed the "What you get" inventory, which had not been
+  updated since 0.1.0. It now covers `.claude/commands/`, the `/goal` and
+  `/delegate` skills, the escalation and memory rules, `docs/HARNESS.md`,
+  `docs/AUTO-MODE.md`, `scripts/bootstrap.sh`, the new drift checks, and the
+  fourth `.gitignore` negation.
+- `docs/SETUP.md`: added an "Auto mode (optional)" section noting that the
+  classifier reads `autoMode` from user settings only, not from
+  `.claude/settings.local.json`.
 - `docs/SETUP.md`: the advisor step no longer claims it needs no
   configuration. It now covers `/advisor`, `advisorModel`, the pairing
   rules for Opus 5.5 and Sonnet 5.5 main models (default: Opus 5.5
