@@ -91,8 +91,15 @@ Platform on AWS, Google Cloud's Agent Platform, or Microsoft Foundry).
 
 Or set `"advisorModel": "fable"` in your user settings, or launch once
 with `claude --advisor fable`. The advisor must be at least as capable
-as the main model: with Opus 5.5 as the main model, use Fable or Opus 5
-or later; a Sonnet advisor is rejected. On plans that bill Fable to usage
+as the main model:
+
+| Main model | Accepted advisors |
+|------|------|
+| Opus 5.5 | Fable, or Opus 5 or later (a Sonnet advisor is rejected) |
+| Sonnet 5.5 | Fable, Opus 4.7 or later, or Sonnet 5 or later |
+
+On the Anthropic API the `sonnet` alias resolves to Sonnet 5.5, which
+needs Claude Code v2.1.284 or later. On plans that bill Fable to usage
 credits, run `/model fable` once to accept that before `/advisor fable`
 takes effect. Subagents inherit the advisor. Setting `DISABLE_TELEMETRY`
 also turns the advisor off. Full reference:
@@ -101,11 +108,11 @@ also turns the advisor off. Full reference:
 If you use a different reviewer, update `{{REVIEWER_TOOL}}` in the
 bootstrap step or manually in `.claude/rules/escalation.md`.
 
-**Step 4 (optional).** Opus 5.5 defaults to `medium` effort. A top-level
-`effortLevel` in your user settings no longer applies to it; set its level
-with `/effort` instead. An `effortLevel` in project settings
-(`.claude/settings.json`) applies to every model, so leave it out of the
-committed file unless the whole team wants it.
+**Step 4 (optional).** Opus 5.5 and Sonnet 5.5 default to `medium`
+effort. A top-level `effortLevel` in your user settings no longer applies
+to them; set their level with `/effort` instead. An `effortLevel` in
+project settings (`.claude/settings.json`) applies to every model, so
+leave it out of the committed file unless the whole team wants it.
 
 For Hermes Agent integration (always-on loops, multi-platform access), see
 `docs/HARNESS.md`.

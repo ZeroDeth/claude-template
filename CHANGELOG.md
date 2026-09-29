@@ -20,8 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `docs/SETUP.md`: the advisor step no longer claims it needs no
   configuration. It now covers `/advisor`, `advisorModel`, the pairing
-  rule for an Opus 5.5 main model, the Fable usage-credits step, and
-  Opus 5.5 effort defaults.
+  rules for Opus 5.5 and Sonnet 5.5 main models, the Fable
+  usage-credits step, and the 5.5 effort defaults.
 - `.claude/rules/escalation.md`: describes how the advisor is enabled,
   names the `code-reviewer` fallback where it is unavailable, and drops
   instructions the advisor already follows on its own.
