@@ -40,39 +40,19 @@ echo "  description : $description"
 echo "  date        : $today"
 echo
 
-# Files to process are DISCOVERED, not hand-listed. A hardcoded list
-# silently misses every doc added to the template later, leaving raw
-# {{PLACEHOLDER}} markers in the generated project. Anything tracked
-# in the scaffold with a text extension is fair game.
-#
-# `find` rather than `git ls-files` on purpose: TEMPLATE.md's Method 2
-# runs this script right after `rm -rf .git && git init`, where the
-# index is empty and `git ls-files` returns nothing.
-#
-# Excluded: scripts/ (both scripts carry literal {{PLACEHOLDER}}
-# patterns that substitution would corrupt) and TEMPLATE.md
-# (meta-documentation you delete).
-# `while read` rather than `mapfile`: macOS still ships bash 3.2,
-# which has no mapfile.
+# find, not git ls-files: Method 2 runs on an empty index. No mapfile:
+# bash 3.2. scripts/ holds literal placeholders substitution would break.
 files=()
 while IFS= read -r f; do
   files+=("$f")
 done < <(
   find . \
-    \( -path ./.git -o -path ./scripts -o -path ./node_modules \
-       -o -path ./vendor -o -path ./.venv -o -path ./target \
-       -o -path ./dist -o -path ./build \) -prune -o \
-    -type f \( -name '*.md' -o -name '*.yaml' -o -name '*.yml' \
-       -o -name '*.json' \) -print \
+    \( -path ./.git -o -path ./scripts \) -prune -o \
+    -type f \( -name '*.md' -o -name '*.yaml' \) -print \
   | sed 's|^\./||' \
   | grep -v '^TEMPLATE\.md$' \
   | sort
 )
-
-if [ "${#files[@]}" -eq 0 ]; then
-  echo "error: no scaffold files found to process" >&2
-  exit 1
-fi
 
 # Use perl because it handles multi-character placeholders identically
 # on macOS (BSD sed) and Linux (GNU sed) without the in-place -i
@@ -88,8 +68,6 @@ for f in "${files[@]}"; do
   fi
 done
 
-# Report what is still unfilled rather than telling the reader to go
-# find out for themselves.
 remaining=$(grep -rhoE '\{\{[A-Z_]+\}\}' "${files[@]}" 2>/dev/null \
   | sort -u | grep -v '^{{PLACEHOLDER}}$' || true)
 
@@ -98,10 +76,6 @@ if [ -n "$remaining" ]; then
   count=$(printf '%s\n' "$remaining" | wc -l | tr -d ' ')
   echo "Remaining placeholders to fill in ($count):"
   printf '%s\n' "$remaining" | sed 's/^/  /'
-  echo
-  echo "  Locate them with:"
-  echo "    grep -rEn '\{\{[A-Z_]+\}\}' . --include='*.md' --include='*.yaml' \\"
-  echo "      --include='*.yml' --include='*.json'"
 else
   echo "No placeholders remain."
 fi

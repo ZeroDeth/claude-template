@@ -37,8 +37,7 @@ time.
   `{{COMMAND}}` placeholder.
 - **`docs/`** — long-form reference with stubs for ARCHITECTURE,
   CONVENTIONS, ORCHESTRATION, SETUP, TROUBLESHOOTING, plus
-  HARNESS (harness and loop engineering) and AUTO-MODE (Claude
-  Code auto mode classifier configuration).
+  HARNESS (harness and loop engineering).
 - **`scripts/bootstrap.sh`** — fills the common placeholders across
   the whole scaffold. It discovers its target files at runtime, so a
   doc added to the template later is substituted automatically
@@ -46,10 +45,9 @@ time.
 - **`scripts/check-claude-structure.sh`** — a pre-commit drift guard
   that blocks commits if `CLAUDE.md` exceeds 200 lines, if any file
   references a machine-local path, if an agent or skill is missing
-  its frontmatter, if `.gitignore` loses its `.claude/` negations, if
-  a `docs/*.md` file is not registered in the `AGENTS.md` and
-  `.claude/rules/docs.md` tables, or if `bootstrap.sh` regresses to a
-  hand-maintained file list.
+  its frontmatter, if `.gitignore` loses its `.claude/` negations, or
+  if a `docs/*.md` file is not registered in the `AGENTS.md` and
+  `.claude/rules/docs.md` tables.
 - **`.pre-commit-config.yaml`** — generic hygiene hooks plus the
   drift guard above. No language-specific tooling; add your own
   (`go-fmt`, `ruff`, `eslint`, ...) below the comment marker.

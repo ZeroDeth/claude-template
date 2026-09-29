@@ -123,13 +123,20 @@ For Hermes Agent integration (always-on loops, multi-platform access), see
 
 ## Auto mode (optional)
 
-To run Claude Code in auto mode (no routine permission prompts, with a
-classifier blocking destructive or external actions), configure the
-`autoMode` block in your user settings. The classifier ignores
-`autoMode` in project settings, including `.claude/settings.local.json`,
-so it cannot be wired through this repo. See `docs/AUTO-MODE.md` for the
-configuration guide, including a `permissions.ask` recipe that keeps a
-human checkpoint before pushes and pull requests.
+Auto mode runs without routine permission prompts while a classifier
+blocks destructive or external actions. Configure `autoMode` in your user
+settings (`$HOME/.claude/settings.json`): the classifier ignores it in
+`.claude/settings.json` and `.claude/settings.local.json`, so this repo
+cannot set it. Reference: <https://code.claude.com/docs/en/auto-mode-config>.
+
+To keep a human checkpoint before pushes and pull requests, add ask rules.
+They prompt even in auto mode, but only match commands that start with
+these words, so `git -C <dir> push` is not caught; use a PreToolUse hook
+for a full-text check.
+
+```json
+{ "permissions": { "ask": ["Bash(git push *)", "Bash(gh pr create *)"] } }
+```
 
 ## Platform gotchas
 

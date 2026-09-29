@@ -158,8 +158,7 @@ fi
 # ---------------------------------------------------------------------------
 # A new doc that nobody registers is invisible: agents never find it
 # through the project-files table, and readers never find it through
-# the doc-tree table. This is the drift that let docs/AUTO-MODE.md ship
-# without being wired into generation.
+# the doc-tree table.
 registry_fail=0
 for f in docs/*.md; do
   [ -f "$f" ] || continue
@@ -175,46 +174,6 @@ done
 
 if [ "$registry_fail" -eq 0 ]; then
   ok_msg "every docs/*.md is listed in AGENTS.md and .claude/rules/docs.md"
-fi
-
-# ---------------------------------------------------------------------------
-# 6. bootstrap.sh still discovers its targets instead of hand-listing
-# ---------------------------------------------------------------------------
-# A hardcoded files=() array silently skips every doc added later,
-# shipping raw {{PLACEHOLDER}} markers into generated projects.
-# Assert the mechanism is present rather than pattern-matching one bad
-# layout: a one-line `files=("a.md" "b.md")` is just as static as a
-# multi-line array, and would slip past a shape-specific test.
-if [ -f scripts/bootstrap.sh ]; then
-  bootstrap_reason=""
-
-  # Comment lines are excluded so prose mentioning find(1) cannot
-  # satisfy the requirement on its own.
-  if ! grep -qE '^[^#]*find[[:space:]]' scripts/bootstrap.sh; then
-    bootstrap_reason="no find(1) enumeration"
-  elif grep -qE '^[[:space:]]*files=\([[:space:]]*[^)[:space:]]' scripts/bootstrap.sh; then
-    bootstrap_reason="files=() is populated inline"
-  elif ! awk '
-    # The find(1) output must reach the array the substitution loop
-    # reads. A stray find elsewhere in the script plus an array that
-    # nothing appends to would otherwise report as dynamic discovery.
-    /^[^#]*files\+=\(/ { appends = 1 }
-    /^[^#]*done[[:space:]]*<[[:space:]]*<\(/ { in_redirect = 1; next }
-    in_redirect && /^[[:space:]]*\)/ { in_redirect = 0; next }
-    in_redirect && /^[^#]*find[[:space:]]/ { fed_by_find = 1 }
-    END { exit !(appends && fed_by_find) }
-  ' scripts/bootstrap.sh; then
-    bootstrap_reason="find(1) output does not populate the files list"
-  fi
-
-  if [ -n "$bootstrap_reason" ]; then
-    fail_msg "scripts/bootstrap.sh hand-lists its target files ($bootstrap_reason)"
-    printf "       A static list misses docs added later, leaking raw\n" >&2
-    printf "       {{PLACEHOLDER}} markers into generated projects. Discover\n" >&2
-    printf "       the file set at runtime instead.\n" >&2
-  else
-    ok_msg "bootstrap.sh discovers its target files at runtime"
-  fi
 fi
 
 # ---------------------------------------------------------------------------

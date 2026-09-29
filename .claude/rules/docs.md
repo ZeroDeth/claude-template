@@ -65,7 +65,6 @@ Claude does not need. Comments inside fenced code blocks are preserved.
 | `CLAUDE.md` | Steering for Claude Code (thin, imports AGENTS.md) |
 | `AGENTS.md` | README for any coding agent (cross-vendor <https://agents.md> spec) |
 | `docs/ARCHITECTURE.md` | Package layout, dependency graph, request flow |
-| `docs/AUTO-MODE.md` | Claude Code auto mode classifier configuration |
 | `docs/CONVENTIONS.md` | Full code style and testing reference |
 | `docs/HARNESS.md` | Harness engineering, loop engineering, Hermes Agent reference |
 | `docs/ORCHESTRATION.md` | Multi-agent composition patterns |

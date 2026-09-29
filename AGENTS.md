@@ -119,7 +119,6 @@ Orchestration patterns for composing multiple subagents live in
 | `TODO.md` | Known gaps and post-mortems |
 | `CLAUDE.md` | Claude-Code-specific overrides (imports this file) |
 | `docs/ARCHITECTURE.md` | Package layout, dependency graph, request flow |
-| `docs/AUTO-MODE.md` | Claude Code auto mode classifier configuration |
 | `docs/CONVENTIONS.md` | Full code style and testing reference |
 | `docs/ORCHESTRATION.md` | Multi-agent composition patterns |
 | `docs/SETUP.md` | Contributor onboarding |
