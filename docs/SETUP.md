@@ -91,12 +91,16 @@ Platform on AWS, Google Cloud's Agent Platform, or Microsoft Foundry).
 
 Or set `"advisorModel": "fable"` in your user settings, or launch once
 with `claude --advisor fable`. The advisor must be at least as capable
-as the main model:
+as the main model. This template's default is Opus 5.5 as the main model
+with Fable 5.1 as the advisor (`/model opus`, then `/advisor fable`):
 
-| Main model | Accepted advisors |
+| Main model | Advisor to use |
 |------|------|
-| Opus 5.5 | Fable, or Opus 5 or later (a Sonnet advisor is rejected) |
-| Sonnet 5.5 | Fable, Opus 4.7 or later, or Sonnet 5 or later |
+| Opus 5.5 (default) | Fable 5.1 (default), or Opus 5.5 |
+| Sonnet 5.5 | Fable 5.1, Opus 5.5, or Sonnet 5.5 |
+
+A Sonnet advisor is rejected with an Opus main model. For older models,
+see the full pairing table in the advisor reference linked below.
 
 On the Anthropic API the `sonnet` alias resolves to Sonnet 5.5, which
 needs Claude Code v2.1.284 or later. On plans that bill Fable to usage
